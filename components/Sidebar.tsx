@@ -11,17 +11,26 @@ interface SidebarProps {
     onDownload: () => void;
 }
 
+const wallpapers = [
+    "/wallpapers/thumbnails/gradient-wallpaper-0001.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0002.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0003.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0004.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0005.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0006.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0007.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0008.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0009.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0010.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0011.jpg",
+    "/wallpapers/thumbnails/gradient-wallpaper-0012.jpg"
+];
+
 const solidColors = [
     "#000000", "#1a1a1a", "#ffffff", "#f3f4f6",
     "#ef4444", "#f97316", "#f59e0b", "#84cc16",
     "#10b981", "#06b6d4", "#3b82f6", "#6366f1",
     "#8b5cf6", "#d946ef", "#f43f5e", "#881337"
-];
-
-// Curated list of abstract/clean wallpapers from picsum
-const wallpaperIds = [
-    10, 25, 28, 29, 48, 56, 
-    70, 84, 197, 203, 230, 247
 ];
 
 const directions: { label: string, value: GradientDirection, rotate: string }[] = [
@@ -123,17 +132,15 @@ const Sidebar: React.FC<SidebarProps> = ({
         }
     };
 
-    const selectWallpaper = async (id: number) => {
+    const selectWallpaper = async (wallpaper: string) => {
         setLoadingWallpaper(true);
         try {
-            const response = await fetch(`https://picsum.photos/id/${id}/1920/1080`);
-            const blob = await response.blob();
-            const base64 = await convertToBase64(blob);
+            const hiResWallpaper = wallpaper.replace('thumbnails', 'hires');
             updateSettings({
                 background: {
                     ...settings.background,
                     type: 'wallpaper',
-                    image: base64
+                    image: hiResWallpaper
                 }
             });
         } catch (e) {
@@ -197,15 +204,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     </svg>
                                 </div>
                             )}
-                            <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
-                                {wallpaperIds.map(id => (
+                            <div className="grid grid-cols-4 gap-2 max-h-60 overflow-y-auto p-1 custom-scrollbar">
+                                {wallpapers.map((wallpaper, index) => (
                                     <button
-                                        key={id}
-                                        onClick={() => selectWallpaper(id)}
-                                        className="aspect-square rounded-md overflow-hidden border border-transparent hover:border-gray-500 focus:ring-1 focus:ring-white transition-all relative group"
+                                        key={index}
+                                        onClick={() => selectWallpaper(wallpaper)}
+                                        className="aspect-square rounded-md overflow-hidden border border-transparent hover:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all relative group"
                                     >
                                         <img 
-                                            src={`https://picsum.photos/id/${id}/200/200`} 
+                                            src={wallpaper} 
                                             alt="Wallpaper" 
                                             className="w-full h-full object-cover"
                                             loading="lazy"

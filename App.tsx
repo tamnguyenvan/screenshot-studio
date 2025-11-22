@@ -71,16 +71,10 @@ const App: React.FC = () => {
         const loadDefaultWallpaper = async () => {
             try {
                 // ID 10 is a safe nature/texture background
-                const response = await fetch('https://picsum.photos/id/10/1920/1080');
-                const blob = await response.blob();
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setSettings(prev => ({
-                        ...prev,
-                        background: { ...prev.background, image: reader.result as string }
-                    }));
-                };
-                reader.readAsDataURL(blob);
+                setSettings(prev => ({
+                    ...prev,
+                    background: { ...prev.background, image: '/wallpapers/hires/gradient-wallpaper-0001.jpg'}
+                }));
             } catch (e) {
                 console.error("Failed to load default wallpaper", e);
             }
