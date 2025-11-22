@@ -9,6 +9,7 @@ interface SidebarProps {
     isAnalyzing: boolean;
     setIsAnalyzing: (val: boolean) => void;
     onDownload: () => void;
+    onCopy: () => Promise<void>;
 }
 
 const wallpapers = [
@@ -51,11 +52,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     imageData, 
     isAnalyzing, 
     setIsAnalyzing,
-    onDownload
+    onDownload,
+    onCopy
 }) => {
     const [dragActive, setDragActive] = useState(false);
     const [loadingWallpaper, setLoadingWallpaper] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [isCopying, setIsCopying] = useState(false);
 
     const handleSmartPalette = async () => {
         if (!imageData) return;
@@ -478,39 +481,51 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <button 
                         id="copy-btn"
                         onClick={async () => {
-                            if (!imageData || copied) return;
+                            if (!imageData || copied || isCopying) return;
+                            
+                            setIsCopying(true); // Bắt đầu loading
                             try {
-                                const response = await fetch(imageData);
-                                const blob = await response.blob();
-                                await navigator.clipboard.write([
-                                    new ClipboardItem({
-                                        [blob.type]: blob
-                                    })
-                                ]);
+                                // Gọi hàm từ App.tsx để render ảnh và ghi vào clipboard
+                                await onCopy(); 
+                                
                                 setCopied(true);
                                 setTimeout(() => setCopied(false), 2000);
                             } catch (err) {
                                 console.error('Failed to copy to clipboard:', err);
+                                alert('Failed to copy image. Browser might not support this format.');
+                            } finally {
+                                setIsCopying(false); // Kết thúc loading
                             }
                         }}
                         className={`flex-1 py-3 font-bold rounded-lg transition-colors flex items-center justify-center gap-2 ${
                             copied 
                                 ? 'bg-green-500 text-white' 
                                 : 'bg-gray-700 text-white hover:bg-gray-600'
-                        }`}
-                        disabled={!imageData || copied}
+                        } ${isCopying ? 'opacity-75 cursor-wait' : ''}`}
+                        disabled={!imageData || copied || isCopying}
                     >
-                        {copied ? (
+                        {/* 4. CẬP NHẬT UI HIỂN THỊ TRẠNG THÁI */}
+                        {isCopying ? (
+                            // Icon Loading
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        ) : copied ? (
+                            // Icon Success
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         ) : (
+                            // Icon Copy mặc định
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </svg>
                         )}
-                        {copied ? 'Copied!' : 'Copy'}
+                        
+                        {/* Text thay đổi theo trạng thái */}
+                        {isCopying ? 'Generating...' : (copied ? 'Copied!' : 'Copy')}
                     </button>
                     <button 
                         id="export-btn"

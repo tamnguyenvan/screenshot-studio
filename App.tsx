@@ -92,6 +92,31 @@ const App: React.FC = () => {
         }
     };
 
+    const handleCopy = async () => {
+    if (!exportRef.current || !image) return;
+    
+    // Delay nhỏ để đảm bảo UI ổn định
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const pixelRatio = 2; 
+    const backgroundColor = settings.background.type === 'solid' ? settings.background.solid : '#000';
+    
+    // Dùng toBlob của html-to-image
+    const blob = await toBlob(exportRef.current, { 
+        cacheBust: true, 
+        pixelRatio, 
+        backgroundColor,
+        // Clipboard API thường hỗ trợ tốt nhất là PNG
+        type: 'image/png' 
+    });
+
+    if (blob) {
+        await navigator.clipboard.write([
+            new ClipboardItem({ [blob.type]: blob })
+        ]);
+    }
+};
+
     const updateSettings = (newSettings: Partial<EditorSettings>) => {
         setSettings(prev => ({ ...prev, ...newSettings }));
     };
@@ -171,6 +196,7 @@ const App: React.FC = () => {
                 isAnalyzing={isAnalyzing}
                 setIsAnalyzing={setIsAnalyzing}
                 onDownload={handleDownload}
+                onCopy={handleCopy}
             />
         </div>
     );
