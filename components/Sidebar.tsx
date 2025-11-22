@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { EditorSettings, GradientDirection, BackgroundType, ExportFormat } from '../types';
 import { generateSmartPalette } from '../services/geminiService';
 
@@ -55,6 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     const [dragActive, setDragActive] = useState(false);
     const [loadingWallpaper, setLoadingWallpaper] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     const handleSmartPalette = async () => {
         if (!imageData) return;
@@ -496,18 +497,57 @@ const Sidebar: React.FC<SidebarProps> = ({
                      </select>
                 </div>
 
-                <button 
-                    id="export-btn"
-                    onClick={onDownload}
-                    className="w-full py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Export as {settings.outputFormat.toUpperCase()}
-                </button>
+                <div className="flex gap-2">
+                    <button 
+                        id="copy-btn"
+                        onClick={async () => {
+                            if (!imageData || copied) return;
+                            try {
+                                const response = await fetch(imageData);
+                                const blob = await response.blob();
+                                await navigator.clipboard.write([
+                                    new ClipboardItem({
+                                        [blob.type]: blob
+                                    })
+                                ]);
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2000);
+                            } catch (err) {
+                                console.error('Failed to copy to clipboard:', err);
+                            }
+                        }}
+                        className={`flex-1 py-3 font-bold rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                            copied 
+                                ? 'bg-green-500 text-white' 
+                                : 'bg-gray-700 text-white hover:bg-gray-600'
+                        }`}
+                        disabled={!imageData || copied}
+                    >
+                        {copied ? (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        ) : (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        )}
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button 
+                        id="export-btn"
+                        onClick={onDownload}
+                        className="flex-1 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Export
+                    </button>
+                </div>
             </div>
         </div>
     );
