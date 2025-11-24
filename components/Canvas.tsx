@@ -20,7 +20,8 @@ const Canvas: React.FC<CanvasProps> = ({ settings, image, onUpload, onFileDrop, 
             if (!containerRef.current) return;
 
             const { clientWidth, clientHeight } = containerRef.current;
-            const padding = 60; // Spacing around the preview
+            // Reduce padding on mobile to maximize view area
+            const padding = window.innerWidth < 768 ? 20 : 60; 
             const availableWidth = clientWidth - padding;
             const availableHeight = clientHeight - padding;
 
@@ -127,7 +128,7 @@ const Canvas: React.FC<CanvasProps> = ({ settings, image, onUpload, onFileDrop, 
     return (
         <div
             ref={containerRef}
-            className="flex-1 relative bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-4"
+            className="flex-1 relative bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-4 min-h-[40vh] md:min-h-0"
             onDragOver={handleDragOver}
         >
             {/* Drag Overlay */}
@@ -138,7 +139,7 @@ const Canvas: React.FC<CanvasProps> = ({ settings, image, onUpload, onFileDrop, 
                     onDrop={handleDrop}
                     onDragOver={(e) => e.preventDefault()}
                 >
-                    <div className="pointer-events-none text-2xl font-bold text-white bg-black/50 px-6 py-3 rounded-xl backdrop-blur-md shadow-xl">
+                    <div className="pointer-events-none text-xl md:text-2xl font-bold text-white bg-black/50 px-6 py-3 rounded-xl backdrop-blur-md shadow-xl">
                         Drop Image Here
                     </div>
                 </div>
@@ -213,15 +214,15 @@ const Canvas: React.FC<CanvasProps> = ({ settings, image, onUpload, onFileDrop, 
                         </div>
                     </div>
                 ) : (
-                    // Empty State / Uploader
-                    <label className="cursor-pointer group relative flex flex-col items-center justify-center w-[600px] h-[400px] border-2 border-dashed border-gray-700 rounded-2xl bg-[#0a0a0a] hover:border-gray-500 hover:bg-[#111] transition-all">
-                        <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    // Empty State / Uploader - Responsive Sizing
+                    <label className="cursor-pointer group relative flex flex-col items-center justify-center w-full max-w-[600px] aspect-[4/3] md:h-[400px] border-2 border-dashed border-gray-700 rounded-2xl bg-[#0a0a0a] hover:border-gray-500 hover:bg-[#111] transition-all p-4 mx-auto">
+                        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg className="w-6 h-6 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-200 mb-2">Upload Screenshot</h3>
-                        <p className="text-sm text-gray-500">Drag & drop or click to browse<br />(or paste from clipboard)</p>
+                        <h3 className="text-lg md:text-xl font-semibold text-gray-200 mb-2 text-center">Upload Screenshot</h3>
+                        <p className="text-xs md:text-sm text-gray-500 text-center">Drag & drop or click to browse<br />(or paste from clipboard)</p>
                         <input
                             type="file"
                             className="hidden"
@@ -237,7 +238,7 @@ const Canvas: React.FC<CanvasProps> = ({ settings, image, onUpload, onFileDrop, 
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
                     <button
                         onClick={() => onUpload({ target: { value: '' } } as any)}
-                        className="px-6 py-2 bg-[#111] border border-[#333] rounded-full text-xs text-gray-400 hover:text-white hover:border-gray-500 transition-all shadow-lg"
+                        className="px-6 py-2 bg-[#111] border border-[#333] rounded-full text-xs text-gray-400 hover:text-white hover:border-gray-500 transition-all shadow-lg whitespace-nowrap"
                     >
                         Reset Image
                     </button>

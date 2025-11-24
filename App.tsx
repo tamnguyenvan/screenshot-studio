@@ -168,16 +168,16 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="fixed inset-0 w-full h-full flex bg-black text-white font-sans overflow-hidden selection:bg-purple-500 selection:text-white">
-            {/* Top Bar */}
-            <div className="absolute top-0 left-0 z-50 p-6 pointer-events-none">
-                <div className="flex items-center gap-3 pointer-events-auto">
-                    <div className="w-8 h-8 bg-transparent rounded-lg flex items-center justify-center text-black p-1">
+        <div className="fixed inset-0 w-full h-full flex flex-col md:flex-row bg-black text-white font-sans overflow-hidden selection:bg-purple-500 selection:text-white">
+            {/* Top Bar - Made smaller and responsive */}
+            <div className="absolute top-0 left-0 z-50 p-4 md:p-6 pointer-events-none">
+                <div className="flex items-center gap-2 md:gap-3 pointer-events-auto bg-black/30 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none rounded-lg p-2 md:p-0">
+                    <div className="w-6 h-6 md:w-8 md:h-8 bg-transparent rounded-lg flex items-center justify-center text-black p-0.5 md:p-1">
                         <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false" className="w-full h-full text-blue-500">
                             <path d="M0.5 0C0.367392 0 0.240215 0.0526784 0.146447 0.146447C0.0526784 0.240215 0 0.367392 0 0.5L0 1H0.5C0.632608 1 0.759785 0.947322 0.853553 0.853553C0.947322 0.759785 1 0.632608 1 0.5V0H0.5ZM0.5 0.75C0.433696 0.75 0.370107 0.723661 0.323223 0.676777C0.276339 0.629893 0.25 0.566304 0.25 0.5C0.25 0.433696 0.276339 0.370107 0.323223 0.323223C0.370107 0.276339 0.433696 0.25 0.5 0.25C0.566304 0.25 0.629893 0.276339 0.676777 0.323223C0.723661 0.370107 0.75 0.433696 0.75 0.5C0.75 0.566304 0.723661 0.629893 0.676777 0.676777C0.629893 0.723661 0.566304 0.75 0.5 0.75Z" fill="currentColor" transform="scale(100)"></path>
                         </svg>
                     </div>
-                    <span className="font-bold tracking-tight text-lg">Screenshot Studio</span>
+                    <span className="font-bold tracking-tight text-base md:text-lg">Screenshot Studio</span>
                 </div>
             </div>
 

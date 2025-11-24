@@ -122,7 +122,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     };
 
     return (
-        <div className="w-80 flex-shrink-0 bg-[#111111] border-l border-[#222] flex flex-col h-full overflow-hidden">
+        <div className="w-full md:w-80 flex-shrink-0 bg-[#111111] border-t md:border-t-0 md:border-l border-[#222] flex flex-col h-[50vh] md:h-full overflow-hidden">
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-8">
                 {/* Social contacts */}
@@ -433,7 +433,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* Action Button (Fixed Footer) */}
-            <div className="p-5 border-t border-[#222] bg-[#111111] space-y-3 z-10">
+            <div className="p-5 border-t border-[#222] bg-[#111111] space-y-3 z-10 pb-8 md:pb-5">
                 {/* Format Selection */}
                 <div className="flex items-center justify-between px-1">
                      <span className="text-xs text-gray-400">Format</span>
