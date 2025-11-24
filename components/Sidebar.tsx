@@ -61,42 +61,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     const [copied, setCopied] = useState(false);
     const [isCopying, setIsCopying] = useState(false);
 
-    const handleSmartPalette = async () => {
-        if (!imageData) return;
-        setIsAnalyzing(true);
-        try {
-            const result = await generateSmartPalette(imageData);
-            if (result.colors && result.colors.length >= 2) {
-                updateSettings({
-                    background: {
-                        ...settings.background,
-                        type: 'gradient',
-                        gradient: {
-                            start: result.colors[0],
-                            end: result.colors[result.colors.length - 1],
-                            direction: 'to bottom right'
-                        }
-                    }
-                });
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setIsAnalyzing(false);
-        }
-    };
-
     const setBgType = (type: BackgroundType) => {
         updateSettings({ background: { ...settings.background, type } });
-    };
-
-    const convertToBase64 = (file: Blob): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
     };
 
     const handleCustomImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
