@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { EditorSettings, GradientDirection, BackgroundType, ExportFormat } from '../types';
 import { generateSmartPalette } from '../services/geminiService';
+import GithubButton from './GithubButton';
 
 interface SidebarProps {
     settings: EditorSettings;
@@ -158,6 +159,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="w-80 flex-shrink-0 bg-[#111111] border-l border-[#222] flex flex-col h-full overflow-hidden">
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-8">
+                {/* Social contacts */}
+                <div>
+                    <GithubButton />
+                </div>
                 
                 {/* Background Section */}
                 <div>
@@ -530,9 +535,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <button 
                         id="export-btn"
                         onClick={onDownload}
-                        className="flex-1 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-all duration-150 ease-in-out flex items-center justify-center gap-2 shadow-sm hover:shadow active:scale-[0.98] active:shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1"
                     >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                             <polyline points="7 10 12 15 17 10" />
                             <line x1="12" y1="15" x2="12" y2="3" />
